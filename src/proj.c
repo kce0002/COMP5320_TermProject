@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <proj.h>
-
 
 int main() {
 	PacketInfo buff1[BUFFER_SIZE];
@@ -45,4 +45,8 @@ void printInfo(PacketInfo *buff1, PacketInfo *buff2) {
 		printf("%d - inBuff: %d, inServer: %d, priority: %d\n", i, buff2[i].inBuff, buff2[i].inServer, buff2[i].priority);	
 	}
 	printf("isFull: %d\n", isFull(buff2));
+}
+
+int genRandom() {
+	return rand() % 2;
 }

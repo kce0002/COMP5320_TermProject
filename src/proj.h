@@ -16,5 +16,6 @@ typedef struct {
 bool isFull(PacketInfo *buff);
 void bufferInit(PacketInfo *buff1, PacketInfo *buff2);
 void printInfo(PacketInfo *buff1, PacketInfo *buff2);
+int genRandom();
 
 #endif
