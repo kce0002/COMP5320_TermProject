@@ -7,7 +7,8 @@
 // Type definitions:
 typedef enum {false, true} bool;
 typedef struct {
-	bool inUse;
+	bool inBuff;
+	bool inServer;
 	int priority;
 } PacketInfo;
 

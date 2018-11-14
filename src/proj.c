@@ -14,7 +14,7 @@ int main() {
 bool isFull(PacketInfo *buff) {
 	int i;
 	for (i = 0; i < BUFFER_SIZE; i++) {
-		if (!buff[i].inUse) {
+		if (!buff[i].inBuff && !buff[i].inServer) {
 			return false;
 		}
 	}
@@ -24,9 +24,11 @@ bool isFull(PacketInfo *buff) {
 void bufferInit(PacketInfo *buff1, PacketInfo *buff2) {
 	int i;
 	for (i = 0; i < BUFFER_SIZE; i++) {
-		buff1[i].inUse = false;
+		buff1[i].inBuff = false;
+		buff1[i].inServer = false;
 		buff1[i].priority = 0;
-		buff2[i].inUse = false;
+		buff2[i].inBuff = false;
+		buff2[i].inServer = false;
 		buff2[i].priority = 0;
 	}
 }
@@ -35,10 +37,12 @@ void printInfo(PacketInfo *buff1, PacketInfo *buff2) {
 	int i;
 	printf("\nBuffer 1:\n");
 	for (i = 0; i < BUFFER_SIZE; i++) {
-		printf("%d - inUse: %d, priority: %d\n", i, buff1[i].inUse, buff1[i].priority);	
+		printf("%d - inBuff: %d, inServer: %d, priority: %d\n", i, buff1[i].inBuff, buff1[i].inServer, buff1[i].priority);	
 	}
+	printf("isFull: %d\n", isFull(buff1));
 	printf("\nBuffer 2:\n");
 	for (i = 0; i < BUFFER_SIZE; i++) {
-		printf("%d - inUse: %d, priority: %d\n", i, buff2[i].inUse, buff2[i].priority);	
+		printf("%d - inBuff: %d, inServer: %d, priority: %d\n", i, buff2[i].inBuff, buff2[i].inServer, buff2[i].priority);	
 	}
+	printf("isFull: %d\n", isFull(buff2));
 }
