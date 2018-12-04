@@ -3,9 +3,13 @@
 #include <time.h>
 #include <proj.h>
 
+// Global variables:
+PacketInfo packets[NUM_PACKETS];
+
 int main() {
 	PacketInfo buff1[BUFFER_SIZE];
 	PacketInfo buff2[BUFFER_SIZE];
+	packetInit(packets);
 	bufferInit(buff1, buff2);
 	printInfo(buff1, buff2);
 	return 0;
@@ -26,10 +30,8 @@ void bufferInit(PacketInfo *buff1, PacketInfo *buff2) {
 	for (i = 0; i < BUFFER_SIZE; i++) {
 		buff1[i].inBuff = false;
 		buff1[i].inServer = false;
-		buff1[i].priority = 0;
 		buff2[i].inBuff = false;
 		buff2[i].inServer = false;
-		buff2[i].priority = 0;
 	}
 }
 
@@ -37,16 +39,24 @@ void printInfo(PacketInfo *buff1, PacketInfo *buff2) {
 	int i;
 	printf("\nBuffer 1:\n");
 	for (i = 0; i < BUFFER_SIZE; i++) {
-		printf("%d - inBuff: %d, inServer: %d, priority: %d\n", i, buff1[i].inBuff, buff1[i].inServer, buff1[i].priority);	
+		printf("%d - inBuff: %d, inServer: %d\n", i, buff1[i].inBuff, buff1[i].inServer);	
 	}
 	printf("isFull: %d\n", isFull(buff1));
 	printf("\nBuffer 2:\n");
 	for (i = 0; i < BUFFER_SIZE; i++) {
-		printf("%d - inBuff: %d, inServer: %d, priority: %d\n", i, buff2[i].inBuff, buff2[i].inServer, buff2[i].priority);	
+		printf("%d - inBuff: %d, inServer: %d\n", i, buff2[i].inBuff, buff2[i].inServer);	
 	}
 	printf("isFull: %d\n", isFull(buff2));
 }
 
 int genRandom() {
 	return rand() % 2;
+}
+
+void packetInit(PacketInfo *packets) {
+	int i;
+	for (i = 0; i < NUM_PACKETS; i++) {
+		packets[i].inBuff = false;
+		packets[i].inServer = false;
+	}
 }
