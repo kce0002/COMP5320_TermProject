@@ -4,12 +4,15 @@
 #include <proj.h>
 
 // Global variables:
-bool packets[NUM_PACKETS];
 int lostPackets = 0;
+int avgQLength = 0;
 
 int main() {
+	int arrivalRate;
+
 	bool buff1[BUFFER_SIZE];
 	bool buff2[BUFFER_SIZE];
+	bool packets[NUM_PACKETS];
 	packetInit(packets);
 	bufferInit(buff1, buff2);
 	return 0;
