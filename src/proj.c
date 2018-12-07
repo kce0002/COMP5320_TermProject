@@ -17,6 +17,10 @@ int main() {
 	bool packets[NUM_PACKETS];
 	packetInit(packets);
 	bufferInit(buff1, buff2);
+	minQAssign(packets, buff1, buff2);
+	lostPackets = 0;
+	bufferInit(buff1, buff2);
+	randomAssign(packets, buff1, buff2);
 	return 0;
 }
 
@@ -45,7 +49,7 @@ int genRandom() {
 void packetInit(bool *packets) {
 	int i;
 	for (i = 0; i < NUM_PACKETS; i++) {
-		packets[i] = false;
+		packets[i] = true;
 	}
 }
 
@@ -60,7 +64,8 @@ void randomAssign(bool *packets, bool *buff1, bool *buff2) {
 			}
 			else {
 				// put packet in last opening in buffer:
-				buff1[lastOpen(buff1)] = packets[i];
+				int a = lastOpen(buff1);
+				buff1[a] = packets[i];
 			}
 		}
 		else {
@@ -70,10 +75,12 @@ void randomAssign(bool *packets, bool *buff1, bool *buff2) {
 			}
 			else {
 				// put packet in last opening in buffer:
-				buff2[lastOpen(buff2)] = packets[i];
+				int b = lastOpen(buff2);
+				buff2[b] = packets[i];
 			}
 		}
 	}
+	printf("\nLost packets: %d", lostPackets);
 }
 
 int lastOpen(bool *buff) {
@@ -83,7 +90,7 @@ int lastOpen(bool *buff) {
 			return i - 1;
 		}
 	}
-	return -1;
+	return 9;
 }
 
 int smallerBuff(bool *buff1, bool *buff2) {
@@ -129,15 +136,16 @@ void minQAssign(bool *packets, bool *buff1, bool *buff2) {
 			}
 		}
 	}
+	printf("Lost Packets: %d", lostPackets);
 }
 
 void prompt(int *lambda, int *mu) {
 	printf("\nEnter arrival rate: ");
 	scanf("%d", &lambda);
-	printf("Enter service rate: ");
+	printf("\nEnter service rate: ");
 	scanf("%d", &mu);
 }
 
 void run(int arrivalRate, int serviceRate, bool *buff1, bool *buff2, bool *packets) {
-
+	
 }
