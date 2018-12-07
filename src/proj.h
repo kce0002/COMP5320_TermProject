@@ -7,17 +7,22 @@
 
 // Type definitions:
 typedef enum {false, true} bool;
+typedef struct {
+    bool inQ;
+    long entryTime;
+} packet;
 
 // Function prototypes:
-bool isFull(bool *buff);
-void bufferInit(bool *buff1, bool *buff2);
-int lastOpen(bool *buff);
+bool isFull(packet *buff);
+void bufferInit(packet *buff1, packet *buff2);
+int lastOpen(packet *buff);
 int genRandom();
-void randomAssign(bool *buff1, bool *buff2);
-int smallerBuff(bool *buff1, bool *buff2);
-void minQAssign(bool *buff1, bool *buff2);
+void randomAssign(packet *buff1, packet *buff2);
+int smallerBuff(packet *buff1, packet *buff2);
+void minQAssign(packet *buff1, packet *buff2);
 void prompt(int *lambda, int *mu);
-void servicePackets(int mu, bool *buff);
-void shift(bool *buff);
+void servicePackets(int mu, packet *buff);
+void shift(packet *buff);
+int qLength(packet *buff);
 
 #endif
