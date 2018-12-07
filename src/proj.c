@@ -3,6 +3,9 @@
 #include <sys/time.h>
 #include <proj.h>
 
+// Kyle Ehlers and Mitchell Derisio
+// COMP 5320
+
 // Global variables:
 int lostPackets = 0;
 int avgQLength = 0;
@@ -14,13 +17,6 @@ int serviceRate = 1;
 struct timeval a;
 struct timeval b;
 
-double randbp10 = 0.0;
-int randql10 = 0;
-long randwt10 = 0;
-double minbp10 = 0.0;
-int minql10 = 0;
-long minwt10 = 0;
-
 int main() {
 	//prompt(&arrivalRate, &serviceRate);
 
@@ -30,17 +26,17 @@ int main() {
     
 	bufferInit(buff1, buff2);
 
-	gettimeofday(&a, NULL);
+	/*gettimeofday(&a, NULL);
 	minQAssign(buff1, buff2);
-	gettimeofday(&b, NULL);
+	gettimeofday(&b, NULL);*/
 	//printf("\ntw: %ld", totalWaitTime);
 	//avgWaitTime = totalWaitTime / ((long) 100 - (long) lostPackets);
 	//printf("a: %ld\nb: %ld\n", a.tv_usec, b.tv_usec);
 	//avgWaitTime = ((b.tv_sec * 1000000 + b.tv_usec) - (a.tv_sec * 1000000 + a.tv_usec)) / (NUM_PACKETS - lostPackets);
-	avgWaitTime = (double) (b.tv_usec - a.tv_usec) / (double) (NUM_PACKETS - lostPackets);
-	//printf("\navg wait time: %6.5f", avgWaitTime);
+	/*avgWaitTime = (double) (b.tv_usec - a.tv_usec) / (double) (NUM_PACKETS - lostPackets);
+	printf("\navg wait time: %6.5f", avgWaitTime);*/
 
-	lostPackets = 0;
+	/*lostPackets = 0;
 	avgQLength = 0;
 	avgWaitTime = 0;
 	totalWaitTime = 0;
@@ -51,9 +47,9 @@ int main() {
 	gettimeofday(&b, NULL);
 	//avgWaitTime = totalWaitTime / (NUM_PACKETS - lostPackets);
 	avgWaitTime = (double) (b.tv_usec - a.tv_usec) / (double) (NUM_PACKETS - lostPackets);
-	//printf("\navg wait time: %6.5f", avgWaitTime);
+	printf("\navg wait time: %6.5f", avgWaitTime);
 	//printf("a: %ld\nb: %ld\n", a.tv_usec, b.tv_usec);
-
+     */
 
     
     printf("\nBlocking Probability:\n----------------------\n");
@@ -63,7 +59,7 @@ int main() {
     int z;
 	int serviceRate = 2;
     //lambda
-    printf("lambda:\n");
+    printf("Lambda:\n");
     int y;
     for (y = 1; y < 11; y++) {
         printf("%d\t", y);
@@ -177,6 +173,270 @@ int main() {
     printf("\n\n\n");
     
 
+
+
+
+
+    // Queue Length Data:
+    printf("\nQueue Length:\n----------------------\n");
+    printf("Lambda:\n");
+    for (y = 1; y < 11; y++) {
+        printf("%d\t", y);
+    }
+    printf("\n");
+    avgQLength = 0;
+    int ranqltotal = 0;
+    serviceRate = 2;
+    for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            randomAssign(buff1, buff2);
+            ranqltotal += avgQLength;
+            avgQLength = 0;
+        }
+        ranqltotal /= 10;
+        ranqltotal /= 10000;
+        printf("%d\t", ranqltotal);
+        bufferInit(buff1, buff2);
+        avgQLength = 0;
+    }
+    printf("\n");
+    int minqltotal = 0;
+    serviceRate = 2;
+    avgQLength = 0;
+    for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            minQAssign(buff1, buff2);
+            minqltotal += avgQLength;
+            avgQLength = 0;
+        }
+        minqltotal /= 10;
+        minqltotal /= 10000;
+        printf("%d\t", minqltotal);
+        bufferInit(buff1, buff2);
+        avgQLength = 0;
+    }
+    printf("\n\nMu:\n");
+    for (y = 1; y < 11; y++) {
+        printf("%d\t", y);
+    }
+    printf("\n");
+    avgQLength = 0;
+    ranqltotal = 0;
+    arrivalRate = 4;
+    for (serviceRate = 1; serviceRate < 11; serviceRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            randomAssign(buff1, buff2);
+            ranqltotal += avgQLength;
+            avgQLength = 0;
+        }
+        ranqltotal /= 10;
+        ranqltotal /= 10000;
+        printf("%d\t", ranqltotal);
+        bufferInit(buff1, buff2);
+        avgQLength = 0;
+    }
+    printf("\n");
+    minqltotal = 0;
+    //serviceRate = 2;
+    avgQLength = 0;
+    for (serviceRate = 1; serviceRate < 11; serviceRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            minQAssign(buff1, buff2);
+            minqltotal += avgQLength;
+            avgQLength = 0;
+        }
+        minqltotal /= 10;
+        minqltotal /= 10000;
+        printf("%d\t", minqltotal);
+        bufferInit(buff1, buff2);
+        avgQLength = 0;
+    }
+    printf("\n\nRho:\n");
+    for (d = 0.25; d <= 2.5; d += 0.25) {
+        printf("%3.2f\t", d);
+    }
+    printf("\n");
+    serviceRate = 2;
+    avgQLength = 0;
+    ranqltotal = 0;
+    minqltotal = 0;
+    for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            randomAssign(buff1, buff2);
+            ranqltotal += avgQLength;
+            avgQLength = 0;
+        }
+        ranqltotal /= 10;
+        ranqltotal /= 10000;
+        printf("%d\t", ranqltotal);
+        bufferInit(buff1, buff2);
+        avgQLength = 0;
+    }
+    printf("\n");
+    serviceRate = 2;
+    avgQLength = 0;
+    for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            minQAssign(buff1, buff2);
+            minqltotal += avgQLength;
+            avgQLength = 0;
+        }
+        minqltotal /= 10;
+        minqltotal /= 10000;
+        printf("%d\t", minqltotal);
+        bufferInit(buff1, buff2);
+        avgQLength = 0;
+    }
+    
+    
+    printf("\n\n\n");
+    printf("\nWaiting Time:\n----------------------\n");
+    printf("Lambda:\n");
+    for (y = 1; y < 11; y++) {
+        printf("%d\t", y);
+    }
+    printf("\n");
+    /*gettimeofday(&a, NULL);
+    randomAssign(buff1, buff2);
+    gettimeofday(&b, NULL);*/
+    serviceRate = 2;
+    double avgtime = 0.0;
+    for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        lostPackets = 0;
+        bufferInit(buff1, buff2);
+        
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            gettimeofday(&a, NULL);
+            randomAssign(buff1, buff2);
+            gettimeofday(&b, NULL);
+            avgtime += (double) (b.tv_usec - a.tv_usec);
+        }
+        
+        avgtime /= 10.0;
+        avgtime /= (100000.0 - (double) lostPackets);
+        lostPackets = 0;
+        printf("%4.3f\t", avgtime);
+        avgtime = 0;
+    }
+    printf("\n");
+    avgtime = 0.0;
+    for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        lostPackets = 0;
+        bufferInit(buff1, buff2);
+        
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            gettimeofday(&a, NULL);
+            minQAssign(buff1, buff2);
+            gettimeofday(&b, NULL);
+            avgtime += (double) (b.tv_usec - a.tv_usec);
+        }
+        
+        avgtime /= 10.0;
+        avgtime /= (100000.0 - (double) lostPackets);
+        lostPackets = 0;
+        printf("%4.3f\t", avgtime);
+        avgtime = 0;
+    }
+    printf("\n\nMu:\n");
+    for (y = 1; y < 11; y++) {
+        printf("%d\t", y);
+    }
+    printf("\n");
+    arrivalRate = 4;
+    avgtime = 0.0;
+    for (serviceRate = 1; serviceRate < 11; serviceRate++) {
+        lostPackets = 0;
+        bufferInit(buff1, buff2);
+        
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            gettimeofday(&a, NULL);
+            randomAssign(buff1, buff2);
+            gettimeofday(&b, NULL);
+            avgtime += (double) (b.tv_usec - a.tv_usec);
+        }
+        
+        avgtime /= 10.0;
+        avgtime /= (100000.0 - (double) lostPackets);
+        lostPackets = 0;
+        printf("%4.3f\t", avgtime);
+        avgtime = 0;
+    }
+    printf("\n");
+    avgtime = 0.0;
+    for (serviceRate = 1; serviceRate < 11; serviceRate++) {
+        lostPackets = 0;
+        bufferInit(buff1, buff2);
+        
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            gettimeofday(&a, NULL);
+            minQAssign(buff1, buff2);
+            gettimeofday(&b, NULL);
+            avgtime += (double) (b.tv_usec - a.tv_usec);
+        }
+        
+        avgtime /= 10.0;
+        avgtime /= (100000.0 - (double) lostPackets);
+        lostPackets = 0;
+        printf("%4.3f\t", avgtime);
+        avgtime = 0;
+    }
+    printf("\n\nRho:\n");
+    for (d = 0.25; d <= 2.5; d += 0.25) {
+        printf("%3.2f\t", d);
+    }
+    printf("\n");
+    avgtime = 0;
+    serviceRate = 2;
+    for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        lostPackets = 0;
+        bufferInit(buff1, buff2);
+        
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            gettimeofday(&a, NULL);
+            randomAssign(buff1, buff2);
+            gettimeofday(&b, NULL);
+            avgtime += (double) (b.tv_usec - a.tv_usec);
+        }
+        
+        avgtime /= 10.0;
+        avgtime /= (100000.0 - (double) lostPackets);
+        lostPackets = 0;
+        printf("%4.3f\t", avgtime);
+        avgtime = 0;
+    }
+    printf("\n");
+    avgtime = 0.0;
+    for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        lostPackets = 0;
+        bufferInit(buff1, buff2);
+        
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            gettimeofday(&a, NULL);
+            minQAssign(buff1, buff2);
+            gettimeofday(&b, NULL);
+            avgtime += (double) (b.tv_usec - a.tv_usec);
+        }
+        
+        avgtime /= 10.0;
+        avgtime /= (100000.0 - (double) lostPackets);
+        lostPackets = 0;
+        printf("%4.3f\t", avgtime);
+        avgtime = 0;
+    }
+    printf("\n");
+    
 	return 0;
 }
 
@@ -252,11 +512,10 @@ void randomAssign(packet *buff1, packet *buff2) {
 		
 	}
 	//printf("\nLost packets: %d\n", lostPackets);
-	avgQLength = qLen / NUM_PACKETS;
+	//avgQLength = qLen / NUM_PACKETS;
 	//printf("\nAvg Q Len: %d\n", avgQLength);
-    
-    // final
-    randbp10 += lostPackets;
+    avgQLength = qLen;
+    //printf("\nAQL: %d", avgQLength);
 }
 
 int lastOpen(packet *buff) {
@@ -337,8 +596,10 @@ void minQAssign(packet *buff1, packet *buff2) {
 		
 	}
 	//printf("\nLost packets: %d\n", lostPackets);
-	avgQLength = qLen / NUM_PACKETS;
+	//avgQLength = qLen / NUM_PACKETS;
 	//printf("\nAvg Q Len: %d\n", avgQLength);
+    avgQLength = qLen;
+    //printf("\nAQL: %d", qLen);
 }
 
 void prompt(int *lambda, int *mu) {
