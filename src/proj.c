@@ -145,7 +145,3 @@ void prompt(int *lambda, int *mu) {
 	printf("\nEnter service rate: ");
 	scanf("%d", &mu);
 }
-
-void run(int arrivalRate, int serviceRate, bool *buff1, bool *buff2, bool *packets) {
-	
-}
