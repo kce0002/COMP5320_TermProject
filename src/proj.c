@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <sys/time.h>
 #include <proj.h>
 
 // Global variables:
@@ -20,12 +20,18 @@ int main() {
 	bufferInit(buff1, buff2);
 
 	minQAssign(buff1, buff2);
+	avgWaitTime = totalWaitTime / (NUM_PACKETS - lostPackets);
+	printf("\navg wait time: %ld", avgWaitTime);
 
 	lostPackets = 0;
 	avgQLength = 0;
+	avgWaitTime = 0;
+	totalWaitTime = 0;
 	bufferInit(buff1, buff2);
 
 	randomAssign(buff1, buff2);
+	avgWaitTime = totalWaitTime / (NUM_PACKETS - lostPackets);
+	printf("\navg wait time: %ld", avgWaitTime);
 
 	return 0;
 }
@@ -44,9 +50,9 @@ void bufferInit(packet *buff1, packet *buff2) {
 	int i;
 	for (i = 0; i < BUFFER_SIZE; i++) {
 		buff1[i].inQ = false;
-		buff1[i].entryTime = 0;
+		buff1[i].entryTime.tv_usec = 0;
 		buff2[i].inQ = false;
-		buff2[i].entryTime = 0;
+		buff2[i].entryTime.tv_usec = 0;
 	}
 }
 
@@ -67,6 +73,8 @@ void randomAssign(packet *buff1, packet *buff2) {
 					lostPackets++;
 				}
 				else {
+					struct timeval t;
+					gettimeofday(&buff1[lastOpen(buff1)].entryTime, NULL);
 					buff1[lastOpen(buff1)].inQ = true;
 				}
 			}
@@ -76,6 +84,8 @@ void randomAssign(packet *buff1, packet *buff2) {
 					lostPackets++;
 				}
 				else {
+					struct timeval t;
+					gettimeofday(&buff2[lastOpen(buff2)].entryTime, NULL);
 					buff2[lastOpen(buff2)].inQ = true;
 				}
 			}
@@ -138,6 +148,8 @@ void minQAssign(packet *buff1, packet *buff2) {
 					lostPackets++;
 				}
 				else {
+					struct timeval t;
+					gettimeofday(&buff1[lastOpen(buff1)].entryTime, NULL);
 					buff1[lastOpen(buff1)].inQ = true;
 				}
 			}
@@ -147,6 +159,8 @@ void minQAssign(packet *buff1, packet *buff2) {
 					lostPackets++;
 				}
 				else {
+					struct timeval t;
+					gettimeofday(&buff2[lastOpen(buff2)].entryTime, NULL);
 					buff2[lastOpen(buff2)].inQ = true;
 				}
 			}
@@ -182,12 +196,14 @@ void servicePackets(int mu, packet *buff) {
 
 void shift(packet *buff) {
 	int i;
-	//bool temp = buff[BUFFER_SIZE - 1];
 	for (i = BUFFER_SIZE - 1; i > 0; i--) {
+		struct timeval exitTime;
+		gettimeofday(&exitTime, NULL);
+		totalWaitTime += (exitTime.tv_usec - buff[i].entryTime.tv_usec);
 		buff[i] = buff[i - 1];
 	}
 	buff[0].inQ = false;
-	buff[0].entryTime = 0;
+	buff[0].entryTime.tv_usec = 0;
 }
 
 int qLength(packet *buff) {

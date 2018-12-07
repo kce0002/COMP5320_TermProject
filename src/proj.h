@@ -5,11 +5,13 @@
 #define BUFFER_SIZE 10
 #define NUM_PACKETS 10000
 
+#include <sys/time.h>
+
 // Type definitions:
 typedef enum {false, true} bool;
 typedef struct {
     bool inQ;
-    long entryTime;
+    struct timeval entryTime;
 } packet;
 
 // Function prototypes:
