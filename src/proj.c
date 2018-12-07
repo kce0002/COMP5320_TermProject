@@ -22,12 +22,12 @@ int minql10 = 0;
 long minwt10 = 0;
 
 int main() {
-	prompt(&arrivalRate, &serviceRate);
+	//prompt(&arrivalRate, &serviceRate);
 
 
 	packet buff1[BUFFER_SIZE];
 	packet buff2[BUFFER_SIZE];
-
+    
 	bufferInit(buff1, buff2);
 
 	gettimeofday(&a, NULL);
@@ -38,7 +38,7 @@ int main() {
 	//printf("a: %ld\nb: %ld\n", a.tv_usec, b.tv_usec);
 	//avgWaitTime = ((b.tv_sec * 1000000 + b.tv_usec) - (a.tv_sec * 1000000 + a.tv_usec)) / (NUM_PACKETS - lostPackets);
 	avgWaitTime = (double) (b.tv_usec - a.tv_usec) / (double) (NUM_PACKETS - lostPackets);
-	printf("\navg wait time: %6.5f", avgWaitTime);
+	//printf("\navg wait time: %6.5f", avgWaitTime);
 
 	lostPackets = 0;
 	avgQLength = 0;
@@ -51,18 +51,131 @@ int main() {
 	gettimeofday(&b, NULL);
 	//avgWaitTime = totalWaitTime / (NUM_PACKETS - lostPackets);
 	avgWaitTime = (double) (b.tv_usec - a.tv_usec) / (double) (NUM_PACKETS - lostPackets);
-	printf("\navg wait time: %6.5f", avgWaitTime);
-	printf("a: %ld\nb: %ld\n", a.tv_usec, b.tv_usec);
+	//printf("\navg wait time: %6.5f", avgWaitTime);
+	//printf("a: %ld\nb: %ld\n", a.tv_usec, b.tv_usec);
 
 
-	
-
-	/*int lambda;
-	int mu = 2;
-	for (lambda = 1; lambda < 11; lambda++) {
-		bufferInit(buff1, buff2);
-		randomAssign(buff1, buff2);
-	}*/
+    
+    printf("\nBlocking Probability:\n----------------------\n");
+    double randbptotal = 0.0;
+    double minbptotal = 0.0;
+    lostPackets = 0;
+    int z;
+	int serviceRate = 2;
+    //lambda
+    printf("lambda:\n");
+    int y;
+    for (y = 1; y < 11; y++) {
+        printf("%d\t", y);
+    }
+    printf("\n");
+    
+	for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            randomAssign(buff1, buff2);
+            randbptotal += lostPackets;
+            lostPackets = 0;
+        }
+        randbptotal /= 10.0;
+        randbptotal /= 10000.0;
+        printf("%6.5f\t", randbptotal);
+        bufferInit(buff1, buff2);
+	}
+    printf("\n");
+    
+    //randbptotal = 0.0;
+    for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            minQAssign(buff1, buff2);
+            minbptotal += lostPackets;
+            lostPackets = 0;
+        }
+        minbptotal /= 10.0;
+        minbptotal /= 10000.0;
+        printf("%6.5f\t", minbptotal);
+        bufferInit(buff1, buff2);
+    }
+    printf("\n\n");
+    printf("Mu:\n");
+    
+    // mu
+    arrivalRate = 4;
+    randbptotal = 0.0;
+    lostPackets = 0;
+    for (y = 1; y < 11; y++) {
+        printf("%d\t", y);
+    }
+    printf("\n");
+    for (serviceRate = 1; serviceRate < 11; serviceRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            randomAssign(buff1, buff2);
+            randbptotal += lostPackets;
+            lostPackets = 0;
+        }
+        randbptotal /= 10.0;
+        randbptotal /= 10000.0;
+        printf("%6.5f\t", randbptotal);
+        bufferInit(buff1, buff2);
+    }
+    printf("\n");
+    lostPackets = 0;
+    minbptotal = 0.0;
+    for (serviceRate = 1; serviceRate < 11; serviceRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            minQAssign(buff1, buff2);
+            minbptotal += lostPackets;
+            lostPackets = 0;
+        }
+        minbptotal /= 10.0;
+        minbptotal /= 10000.0;
+        printf("%6.5f\t", minbptotal);
+        bufferInit(buff1, buff2);
+    }
+    
+    // rho:
+    printf("\n\n");
+    printf("Rho:\n");
+    double d;
+    for (d = 0.25; d <= 2.5; d += 0.25) {
+        printf("%3.2f\t", d);
+    }
+    printf("\n");
+    serviceRate = 2;
+    randbptotal = 0.0;
+    lostPackets = 0;
+    for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            randomAssign(buff1, buff2);
+            randbptotal += lostPackets;
+            lostPackets = 0;
+        }
+        randbptotal /= 10.0;
+        randbptotal /= 10000.0;
+        printf("%6.5f\t", randbptotal);
+        bufferInit(buff1, buff2);
+    }
+    printf("\n");
+    lostPackets = 0;
+    minbptotal = 0.0;
+    for (arrivalRate = 1; arrivalRate < 11; arrivalRate++) {
+        for (z = 0; z < 10; z++) {
+            bufferInit(buff1, buff2);
+            minQAssign(buff1, buff2);
+            minbptotal += lostPackets;
+            lostPackets = 0;
+        }
+        minbptotal /= 10.0;
+        minbptotal /= 10000.0;
+        printf("%6.5f\t", minbptotal);
+        bufferInit(buff1, buff2);
+    }
+    printf("\n\n\n");
+    
 
 	return 0;
 }
@@ -138,9 +251,12 @@ void randomAssign(packet *buff1, packet *buff2) {
 		servicePackets(serviceRate, buff2);	
 		
 	}
-	printf("\nLost packets: %d\n", lostPackets);
+	//printf("\nLost packets: %d\n", lostPackets);
 	avgQLength = qLen / NUM_PACKETS;
-	printf("\nAvg Q Len: %d\n", avgQLength);
+	//printf("\nAvg Q Len: %d\n", avgQLength);
+    
+    // final
+    randbp10 += lostPackets;
 }
 
 int lastOpen(packet *buff) {
@@ -220,9 +336,9 @@ void minQAssign(packet *buff1, packet *buff2) {
 		servicePackets(serviceRate, buff2);	
 		
 	}
-	printf("\nLost packets: %d\n", lostPackets);
+	//printf("\nLost packets: %d\n", lostPackets);
 	avgQLength = qLen / NUM_PACKETS;
-	printf("\nAvg Q Len: %d\n", avgQLength);
+	//printf("\nAvg Q Len: %d\n", avgQLength);
 }
 
 void prompt(int *lambda, int *mu) {
