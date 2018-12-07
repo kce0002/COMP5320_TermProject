@@ -17,5 +17,7 @@ int genRandom();
 void randomAssign(bool *packets, bool *buff1, bool *buff2);
 int smallerBuff(bool *buff1, bool *buff2);
 void minQAssign(bool *packets, bool *buff1, bool *buff2);
+void prompt(int *lambda, int *mu);
+void run(int arrivalRate, int serviceRate, bool *buff1, bool *buff2, bool *packets);
 
 #endif

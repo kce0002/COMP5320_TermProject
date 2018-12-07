@@ -9,6 +9,8 @@ int avgQLength = 0;
 
 int main() {
 	int arrivalRate;
+	int serviceRate;
+	prompt(arrivalRate, serviceRate);
 
 	bool buff1[BUFFER_SIZE];
 	bool buff2[BUFFER_SIZE];
@@ -127,4 +129,15 @@ void minQAssign(bool *packets, bool *buff1, bool *buff2) {
 			}
 		}
 	}
+}
+
+void prompt(int *lambda, int *mu) {
+	printf("\nEnter arrival rate: ");
+	scanf("%d", &lambda);
+	printf("Enter service rate: ");
+	scanf("%d", &mu);
+}
+
+void run(int arrivalRate, int serviceRate, bool *buff1, bool *buff2, bool *packets) {
+
 }
