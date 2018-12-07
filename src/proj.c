@@ -139,7 +139,7 @@ void minQAssign(bool *packets, bool *buff1, bool *buff2) {
 	printf("Lost Packets: %d", lostPackets);
 }
 
-void prompt(int *lambda, int *mu) {
+void prompt(int lambda, int mu) {
 	printf("\nEnter arrival rate: ");
 	scanf("%d", &lambda);
 	printf("\nEnter service rate: ");

@@ -17,6 +17,6 @@ int genRandom();
 void randomAssign(bool *packets, bool *buff1, bool *buff2);
 int smallerBuff(bool *buff1, bool *buff2);
 void minQAssign(bool *packets, bool *buff1, bool *buff2);
-void prompt(int *lambda, int *mu);
+void prompt(int lambda, int mu);
 
 #endif
