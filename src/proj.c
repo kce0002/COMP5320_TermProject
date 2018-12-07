@@ -6,21 +6,29 @@
 // Global variables:
 int lostPackets = 0;
 int avgQLength = 0;
+int arrivalRate = 1;
+int serviceRate = 1;
 
 int main() {
-	int arrivalRate;
-	int serviceRate;
+	
+
 	prompt(arrivalRate, serviceRate);
 
 	bool buff1[BUFFER_SIZE];
 	bool buff2[BUFFER_SIZE];
 	bool packets[NUM_PACKETS];
+
 	packetInit(packets);
 	bufferInit(buff1, buff2);
+
 	minQAssign(packets, buff1, buff2);
+
 	lostPackets = 0;
+
 	bufferInit(buff1, buff2);
+
 	randomAssign(packets, buff1, buff2);
+
 	return 0;
 }
 
@@ -119,12 +127,13 @@ void minQAssign(bool *packets, bool *buff1, bool *buff2) {
 		int selection = smallerBuff(buff1, buff2);
 		// buff1
 		if (selection) {
-			if (isFull(buff1)) {
-				lostPackets++;
-			}
-			else {			
-				buff1[lastOpen(buff1)] = packets[i];
-			}
+				if (isFull(buff1)) {
+					lostPackets++;
+				}
+				else {			
+					buff1[lastOpen(buff1)] = packets[i];
+				}
+			removePackets(serviceRate, buff1);
 		}
 		// buff2
 		else {
@@ -134,7 +143,9 @@ void minQAssign(bool *packets, bool *buff1, bool *buff2) {
 			else {
 				buff2[lastOpen(buff2)] = packets[i];
 			}
+			removePackets(serviceRate, buff2);
 		}
+
 	}
 	printf("Lost Packets: %d", lostPackets);
 }
@@ -144,4 +155,21 @@ void prompt(int lambda, int mu) {
 	scanf("%d", &lambda);
 	printf("\nEnter service rate: ");
 	scanf("%d", &mu);
+}
+
+void removePackets(int mu, bool *buff) {
+	int i;
+	int j;
+	for (i = 0; i < mu; i++) {
+		shift(buff);
+	}
+}
+
+void shift(bool *buff) {
+	int i;
+	//bool temp = buff[BUFFER_SIZE - 1];
+	for (i = BUFFER_SIZE - 1; i > 0; i--) {
+		buff[i] = buff[i - 1];
+	}
+	buff[0] = false;
 }
