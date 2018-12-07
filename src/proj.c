@@ -12,7 +12,7 @@ int serviceRate = 1;
 int main() {
 	
 
-	prompt(arrivalRate, serviceRate);
+	prompt(&arrivalRate, &serviceRate);
 
 	bool buff1[BUFFER_SIZE];
 	bool buff2[BUFFER_SIZE];
@@ -21,11 +21,11 @@ int main() {
 	packetInit(packets);
 	bufferInit(buff1, buff2);
 
-	minQAssign(packets, buff1, buff2);
+	//minQAssign(packets, buff1, buff2);
 
-	lostPackets = 0;
+	//lostPackets = 0;
 
-	bufferInit(buff1, buff2);
+	//bufferInit(buff1, buff2);
 
 	randomAssign(packets, buff1, buff2);
 
@@ -62,33 +62,38 @@ void packetInit(bool *packets) {
 }
 
 void randomAssign(bool *packets, bool *buff1, bool *buff2) {
+	int sent = 0;
 	int i;
-	for (i = 0; i < NUM_PACKETS; i++) {	
-		int selection = genRandom();
-		if (selection) {
-			// Buffer 1
-			if (isFull(buff1)) {
-				lostPackets++;
+	while (sent < NUM_PACKETS) {
+		for (i = 0; i < arrivalRate; i++) {
+			int selection = genRandom();
+			if (selection) {
+				if (isFull(buff1)) {
+					lostPackets++;
+				}
+				else {
+					buff1[lastOpen(buff1)] = true;
+				}
 			}
 			else {
-				// put packet in last opening in buffer:
-				int a = lastOpen(buff1);
-				buff1[a] = packets[i];
+				if (isFull(buff2)) {
+					lostPackets++;
+				}
+				else {
+					buff2[lastOpen(buff2)] = true;
+				}
+			}
+			sent++;
+			//printf("\nSENT: %d\n", sent);
+			if (sent > NUM_PACKETS) {
+				break;
 			}
 		}
-		else {
-			// Buffer 2
-			if (isFull(buff2)) {
-				lostPackets++;
-			}
-			else {
-				// put packet in last opening in buffer:
-				int b = lastOpen(buff2);
-				buff2[b] = packets[i];
-			}
-		}
+		servicePackets(serviceRate, buff1);
+		servicePackets(serviceRate, buff2);	
+		
 	}
-	printf("\nLost packets: %d", lostPackets);
+	printf("\nLost packets: %d\n", lostPackets);
 }
 
 int lastOpen(bool *buff) {
@@ -123,43 +128,46 @@ int smallerBuff(bool *buff1, bool *buff2) {
 
 void minQAssign(bool *packets, bool *buff1, bool *buff2) {
 	int i;
+	int j;
 	for (i = 0; i < NUM_PACKETS; i++) {
-		int selection = smallerBuff(buff1, buff2);
-		// buff1
-		if (selection) {
-				if (isFull(buff1)) {
+		for (j = 0; j < arrivalRate; j++) {
+			int selection = smallerBuff(buff1, buff2);
+			// buff1
+			if (selection) {
+					if (isFull(buff1)) {
+						lostPackets++;
+					}
+					else {			
+						buff1[lastOpen(buff1)] = packets[i];
+					}
+			}
+			// buff2
+			else {
+				if (isFull(buff2)) {
 					lostPackets++;
 				}
-				else {			
-					buff1[lastOpen(buff1)] = packets[i];
+				else {
+					buff2[lastOpen(buff2)] = packets[i];
 				}
-			removePackets(serviceRate, buff1);
-		}
-		// buff2
-		else {
-			if (isFull(buff2)) {
-				lostPackets++;
 			}
-			else {
-				buff2[lastOpen(buff2)] = packets[i];
-			}
-			removePackets(serviceRate, buff2);
 		}
-
+		servicePackets(serviceRate, buff1);
+		servicePackets(serviceRate, buff2);
 	}
+	
 	printf("Lost Packets: %d", lostPackets);
 }
 
-void prompt(int lambda, int mu) {
+void prompt(int *lambda, int *mu) {
 	printf("\nEnter arrival rate: ");
-	scanf("%d", &lambda);
+	scanf("%d", lambda);
 	printf("\nEnter service rate: ");
-	scanf("%d", &mu);
+	scanf("%d", mu);
+	
 }
 
-void removePackets(int mu, bool *buff) {
+void servicePackets(int mu, bool *buff) {
 	int i;
-	int j;
 	for (i = 0; i < mu; i++) {
 		shift(buff);
 	}
