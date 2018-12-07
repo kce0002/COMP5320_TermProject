@@ -12,6 +12,7 @@ typedef enum {false, true} bool;
 typedef struct {
     bool inQ;
     struct timeval entryTime;
+    //time_t entryTime;
 } packet;
 
 // Function prototypes:
